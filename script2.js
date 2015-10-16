@@ -1,6 +1,5 @@
-<script>
 //Сумма диапазона
-/*function range(a, b, step) {
+function range(a, b, step) {
 	var res = [];
 	res[0] = a;
 	if(step === undefined) {
@@ -27,19 +26,19 @@ function sum(arr) {
 	}
 	return s;
 }
-console.log(range(-5, 2));*/
+console.log(range(-5, 2));
 
 //Обращаем вспять массив
-/*function reverseArray(arr) {
+function reverseArray(arr) {
 	var newarr = [];
 	for(i = arr.length - 1; i >=0; i--) {
 		newarr.push(arr[i]);
 	}
 	return newarr;
 }
-console.log(reverseArray([1, 2, 3, 4, 7, 1]));*/
+console.log(reverseArray([1, 2, 3, 4, 7, 1]));
 
-/*function reverseArrayInPlace(arr) {
+function reverseArrayInPlace(arr) {
 	for(i = arr.length - 1; i >=0; i--) {
 		arr.push(arr[i]);
 	}
@@ -51,7 +50,7 @@ console.log(reverseArray([1, 2, 3, 4, 7, 1]));*/
 }
 var arrayValue = [1, 2, 3, 4, 5];
 reverseArrayInPlace(arrayValue);
-console.log(arrayValue);*/
+console.log(arrayValue);
 
 //Список
 function arrayToList(arr) {
@@ -73,4 +72,3 @@ function arrayToList(arr) {
 	fill(list);
 }
 console.log(arrayToList([10, 20, 30, 40, 50]));
-</script>

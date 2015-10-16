@@ -1,5 +1,4 @@
-<script>
-/*//Минимум
+//Минимум
 function min(a, b) {
 	if(a < b) {
 		console.log(a);
@@ -40,7 +39,7 @@ function countChar(string, a) {
 		}
 	}
 	return res.length;
-}*/
+}
 
 //Дополнительное задание
 
@@ -54,5 +53,3 @@ function reduce(arr, combine) {
 var result = reduce([1, 2, 3, 4, 5],  function(a, b) {
 	return a + b;});
 console.log(result);
-
-</script>

@@ -54,21 +54,126 @@ console.log(arrayValue);
 
 //Список
 function arrayToList(arr) {
-	var list = {};
-	function fill() {
-		if(arr[0] === undefined) {
-			list.rest = null;
+ var list = {};
+ var cur = {};
+
+ list.value = arr.shift();
+ list.rest = cur;
+ 
+ var count = arr.length;
+ 
+ while(count > 0) {
+	cur.value = arr.shift();
+	cur.rest = {};
+	cur = cur.rest;
+	count--;
+}
+return list;
+}
+console.log(arrayToList([10, 20, 30,40, 50]));
+
+//Список с помощью рекурсии
+function arrayToListRec(arr) {
+ var list = {};
+ list.value = arr.shift();
+	
+	function fill(list) {
+		while(arr.length > 0) {
+			var cur = {};
+			list.rest = cur;
+			list.rest.value = arr.shift();
+			list = list.rest;
+			fill(list);
 		}
-		else {
-			list.value = arr[0];
-			arr.shift();
-			list.rest = {
-				value: arr[0],
-				rest: fill()
+	return list;
+	}
+fill(list);
+return list;
+}
+console.log(arrayToListRec([10, 20, 30, 40, 50]));
+
+//Список в массив
+function listToArray(list) {
+	var arr = [];
+	function bypass(list) {
+		for(var i in list) {
+			if(typeof list[i] != "object") {
+				arr.push(list[i]);
 			}
-			console.log(list);
+			else {
+				list = list[i];
+				bypass(list);
+			}
 		}
 	}
-	fill(list);
+	bypass(list);
+	return arr;
 }
-console.log(arrayToList([10, 20, 30, 40, 50]));
+console.log(listToArray(arrayToList([10, 20, 30, 40, 50])));
+
+//Функция prepend
+function prepend(value, list) {
+	var forAdd = {};
+	forAdd.value = value;
+	forAdd.rest = list;
+	return forAdd;
+}
+console.log(prepend(10, prepend(20, null)));
+
+//Функция nth
+function nth(list, position) {
+	var arr = listToArray(list);
+	return arr[position];
+}
+console.log(nth(arrayToList([10, 20, 30]), 1));
+
+//Функция nth рекурсивно - здесь как понял, внутри должна быть рекурсивная функция. Собственно, взял ее из упражнения "Список в массив", только чтобы возвращала один элемент
+function nthRec(list, position) {
+	var arr = [];
+	function searchValue(list) {
+		for(var i in list) {
+			if(typeof list[i] != "object") {
+				arr.push(list[i]);
+			}
+			else {
+				list = list[i];
+				searchValue(list);
+			}
+		}
+	}
+	searchValue(list);
+	return arr[position];
+}
+console.log(nthRec(arrayToList([10, 20, 30]), 1));
+
+//Глубокое сравнение
+function deepEqual(obj1, obj2) {
+    if (obj1 === obj2) {
+        return true;
+    }
+    if (typeof(obj1) != "object" || obj1 === null || typeof(obj2) != "object" || obj2 === null) {
+        return false;
+    }
+ 
+    for (var property in obj1) {
+        
+        if (!(obj1.hasOwnProperty(property) && obj2.hasOwnProperty(property)) || !deepEqual(obj1[property], obj2[property])) {
+            return false;        
+        }
+		else return true;
+    }           
+}
+var test1 = {};
+var test2 = 5;
+var test3 = 5;
+var test4 = 7;
+console.log(deepEqual(null, null));
+console.log(deepEqual(null, test1));
+console.log(deepEqual(test2, test3));
+console.log(deepEqual(test3, test4));
+console.log(deepEqual(test1, test4));
+var obj = {here: {is: "an"}, object: 2};
+console.log(deepEqual(obj, obj));
+console.log(deepEqual(obj, {here: 1, object: 2}));
+console.log(deepEqual(obj, {here: {is: "an"}, object: 2}));
+

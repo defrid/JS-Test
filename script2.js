@@ -250,18 +250,15 @@ console.log(queue);
 //Функция deepCopy
 function deepCopy(obj) {
 	var newObj = {};
-		function copy(obj) {
-			for(var key in obj) {
-				if(typeof obj[key] != "object" || obj[key] === null){
-					var property = obj[key];
-					newObj[key] = property;
-				}
-				else {
-					copy(obj[i]);
-				}
-		}
+		for(var key in obj) {
+			if(typeof obj[key] != "object" || obj[key] === null){
+				var property = obj[key];
+				newObj[key] = property;
+			}
+			else {
+				newObj[key] = deepCopy(obj[key]);
+			}
 	}
-	copy(obj);
 	return newObj;
 }
 
@@ -276,7 +273,7 @@ console.log(first);
 var second = deepCopy(first);
 console.log(second);
 
-first.property1.property2 = "okaaay";
+first.property2.property1 = "okaaay";
 console.log(first);
 console.log(second);
 

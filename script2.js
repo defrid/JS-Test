@@ -216,23 +216,27 @@ function popStack(stack) {
 	while(stack.rest.hasOwnProperty("rest")) {
 		stack = stack.rest;
 	}
+	var res = stack.rest;
 	delete stack.rest;
+	return res;
 }
 var stack = new List(9);
 push(stack, 7);
 push(stack, 10);
 console.log(stack);
-popStack(stack);
+console.log(popStack(stack));
 console.log(stack);
 
 //Функция pop для очереди
 function popQueue(queue) {
+	var res = queue.head;
 	var tail = queue.rest;
 	delete queue.head;
 	queue.head = {
 		value: tail.value
 	};
 	queue.rest = tail.rest;
+	return res;
 }
 
 var queue = new List(5);
@@ -240,7 +244,7 @@ push(queue, 7);
 push(queue, 10);
 push(queue, 15);
 console.log(queue);
-popQueue(queue);
+console.log(popQueue(queue));
 console.log(queue);
 
 //Функция deepCopy

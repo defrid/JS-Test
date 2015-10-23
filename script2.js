@@ -258,7 +258,7 @@ function deepCopy(obj) {
 			else {
 				newObj[key] = deepCopy(obj[key]);
 			}
-	}
+		}
 	return newObj;
 }
 
@@ -277,6 +277,17 @@ first.property2.property1 = "okaaay";
 console.log(first);
 console.log(second);
 
+//Улучшенная deepCopy
+function deepCopy(obj) {
+ if (typeof obj != "object" || obj === null)
+  return obj;
+
+ var newObj = {};
+ for(var key in obj) {
+  newObj[key] = deepCopy(obj[key]);
+ }
+ return newObj;
+}
 
 
 

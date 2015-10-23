@@ -1,22 +1,39 @@
 // Utils
 function Utils() {
 	
-	if(check) {
-		return check;
+	if(Utils.check) {
+		return Utils.check;
 	}
 	else if(this === window) {
 		return new Utils();
 	}
 	
-	var check = this;
+	Utils.check = this;
 	
 	this.reduce = {};
 	this.deepEquals = {};
 	this.deepCopy = {};
 }
 
-var obj1 = new Utils;
-var obj2 = new Utils;
+//Utils через замыкание
+
+var closure = function() {
+	var instance;
+	
+	return function() {
+		if(instance) {
+			return instance;
+		}
+		else return function newUtils() {
+			this.reduce = {};
+			this.deepEquals = {};
+			this.deepCopy = {};
+		}		
+	}
+}
+
+var obj1 = closure;
+var obj2 = closure;
 
 console.log(obj1 === obj2);
 
@@ -46,3 +63,5 @@ concrteFactory1 = function() {
 concreteFactory2 = function() {
 	return new inheritor2();
 }
+
+console.log()

@@ -6,13 +6,17 @@ function Scope() {
 	this.$watch = function(watchFn, ListenerFn) {
 		var set = {
 			watchFn: watchFn,
-			ListenerFn: ListenerFn
+			ListenerFn: ListenerFn,
 		}
+		set.previous = null;
 		this.arrOfListeners.push(set);
 	}
 	this.$digest = function() {
 		for(var i = 0; i < this.arrOfListeners.length; i++) {
-			this.arrOfListeners[i].ListenerFn();
+			if(this.arrOfListeners[i].previous != this.arrOfListeners[i].watchFn()) {
+				this.arrOfListeners[i].ListenerFn();
+				this.arrOfListeners[i].previous = this.arrOfListeners[i].watchFn();
+			}
 		}
 	};
 }
@@ -71,7 +75,6 @@ var scopeTests = {
         );
 
         console.assert(scope.counter === 0); //No changes
-
         scope.$digest();
         scope.$digest();
         console.assert(scope.counter === 1);

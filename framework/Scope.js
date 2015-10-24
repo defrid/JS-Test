@@ -1,3 +1,11 @@
+function Scope() {
+	this.arr = [];
+	this.$new = function() {
+	return new Scope;
+}
+}
+
+
 var $rootScope;
 var scopeTests = {
     Test1: function() {

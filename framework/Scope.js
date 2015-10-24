@@ -1,7 +1,7 @@
 function Scope() {
 	this.arrOfListeners = [];
 	this.$new = function() {
-	return new Scope;
+	return new Scope();
 	}
 }
 

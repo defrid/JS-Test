@@ -13,9 +13,7 @@ function Scope() {
 	}
 	this.$digest = function() {
 		for(var i = 0; i < this.arrOfListeners.length; i++) {
-			for(var key in this.arrOfListeners[i]) {
-				this.arrOfListeners[i][key]();
-			}
+			this.arrOfListeners[i]["ListenerFn"]();
 		}
 	};
 }

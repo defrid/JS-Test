@@ -9,11 +9,10 @@ function Scope() {
 			ListenerFn: ListenerFn
 		}
 		this.arrOfListeners.push(set);
-		console.log(this.arrOfListeners[0]);
 	}
 	this.$digest = function() {
 		for(var i = 0; i < this.arrOfListeners.length; i++) {
-			this.arrOfListeners[i]["ListenerFn"]();
+			this.arrOfListeners[i].ListenerFn();
 		}
 	};
 }

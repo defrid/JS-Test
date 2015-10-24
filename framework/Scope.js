@@ -1,8 +1,23 @@
 function Scope() {
 	this.arrOfListeners = [];
 	this.$new = function() {
-	return new Scope();
+		return new Scope();
+	};
+	this.$watch = function(watchFn, ListenerFn) {
+		var set = {
+			watchFn: watchFn,
+			ListenerFn: ListenerFn
+		}
+		this.arrOfListeners.push(set);
+		console.log(this.arrOfListeners[0]);
 	}
+	this.$digest = function() {
+		for(var i = 0; i < this.arrOfListeners.length; i++) {
+			for(var key in this.arrOfListeners[i]) {
+				this.arrOfListeners[i][key]();
+			}
+		}
+	};
 }
 
 

@@ -12,12 +12,25 @@ function Scope() {
 		this.arrOfListeners.push(set);
 	}
 	this.$digest = function() {
-		for(var i = 0; i < this.arrOfListeners.length; i++) {
-			if(this.arrOfListeners[i].previous != this.arrOfListeners[i].watchFn()) {
-				this.arrOfListeners[i].ListenerFn();
-				this.arrOfListeners[i].previous = this.arrOfListeners[i].watchFn();
+		var foundChanges = true;
+		var stopOn = 7;
+		while(foundChanges && stopOn > 0) {
+			if(stopOn === 1) {
+				throw "Limit is exceeded";
 			}
-		}
+			else {
+				for(var i = 0; i < this.arrOfListeners.length; i++) {
+					if(this.arrOfListeners[i].previous != this.arrOfListeners[i].watchFn()) {
+						this.arrOfListeners[i].ListenerFn();
+						this.arrOfListeners[i].previous = this.arrOfListeners[i].watchFn();
+						stopOn--;
+					}
+					else {
+						foundChanges = false;
+					}
+				}
+			}
+		}		
 	};
 }
 
@@ -75,6 +88,7 @@ var scopeTests = {
         );
 
         console.assert(scope.counter === 0); //No changes
+		
         scope.$digest();
         scope.$digest();
         console.assert(scope.counter === 1);

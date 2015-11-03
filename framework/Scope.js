@@ -1,36 +1,43 @@
 function Scope() {
-	this.arrOfListeners = [];
+	this.$$arrOfListeners = [];
 	this.$new = function() {
 		return new Scope();
 	};
-	this.$watch = function(watchFn, ListenerFn) {
+	this.CONST = {
+		stopOn: 10
+	}
+	this.$watch = function(watchFn, listenerFn) {
 		var set = {
 			watchFn: watchFn,
-			ListenerFn: ListenerFn,
+			listenerFn: listenerFn,
+			previous: null
 		}
-		set.previous = null;
-		this.arrOfListeners.push(set);
+		this.$$arrOfListeners.push(set);
 	}
+	this.$$digestOnce = function() {
+		var foundChanges;
+		for(var i = 0; i < this.$$arrOfListeners.length; i++) {
+			var current = this.$$arrOfListeners[i].watchFn();
+			var previous = this.$$arrOfListeners[i].previous;
+			if(!utils.deepEquals(previous, current)) {
+				this.$$arrOfListeners[i].listenerFn();
+				foundChanges = true;
+				this.$$arrOfListeners[i].previous = current;
+			}
+			
+		}
+		return foundChanges;
+	};
 	this.$digest = function() {
-		var foundChanges = true;
-		var stopOn = 7;
-		while(foundChanges && stopOn > 0) {
-			if(stopOn === 1) {
+		var counter = this.CONST.stopOn;
+		var foundChanges;
+		do {
+			foundChanges = this.$$digestOnce();
+			counter--;
+			if(counter === 0) {
 				throw "Limit is exceeded";
 			}
-			else {
-				for(var i = 0; i < this.arrOfListeners.length; i++) {
-					if(this.arrOfListeners[i].previous != this.arrOfListeners[i].watchFn()) {
-						this.arrOfListeners[i].ListenerFn();
-						this.arrOfListeners[i].previous = this.arrOfListeners[i].watchFn();
-						stopOn--;
-					}
-					else {
-						foundChanges = false;
-					}
-				}
-			}
-		}		
+		} while(foundChanges);
 	};
 }
 

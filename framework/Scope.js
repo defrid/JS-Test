@@ -19,12 +19,13 @@ function Scope() {
 		for(var i = 0; i < this.$$arrOfListeners.length; i++) {
 			var current = this.$$arrOfListeners[i].watchFn();
 			var previous = this.$$arrOfListeners[i].previous;
-			if(!utils.deepEquals(previous, current)) {
-				this.$$arrOfListeners[i].listenerFn();
-				foundChanges = true;
-				this.$$arrOfListeners[i].previous = current;
+			if(previous === previous || current === current) {
+				if(!utils.deepEquals(previous, current)) {
+					this.$$arrOfListeners[i].listenerFn();
+					foundChanges = true;
+					this.$$arrOfListeners[i].previous = current;
+				}
 			}
-			
 		}
 		return foundChanges;
 	};
@@ -186,7 +187,7 @@ var scopeTests = {
         );
 
         scope.$digest();
-
+	
         console.assert(scope.counter === 1); //NaN != NaN cause $digest to be always dirty
         console.log("Test6 Success");
     },

@@ -41,7 +41,7 @@ function utilsSingletone() {
 					newObj[key] = property;
 				}
 				else {
-					newObj[key] = deepCopy(obj[key]);
+					newObj[key] = this.deepCopy(obj[key]);
 				}
 			}
 		return newObj;

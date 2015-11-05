@@ -3,11 +3,17 @@ function Scope() {
     this.$$arrOfListeners = [];
     
     this.$new = function() {
-        return new Scope();
+        var children = new Scope ();
+        children.prototype = this;
+        children.prototype.constructor = children;
+        children.$$parent = this;
+        this.$$children = [];
+        this.$$children.push(children);
+        return children;
     };
     
     this.$$CONST = {
-        stopOn: 10
+        STOPON: 10
     };
     this.$watch = function(watchFn, listenerFn) {
         var set = {
@@ -20,28 +26,29 @@ function Scope() {
     
     this.$$phase = null;
     
-    this.$activatePhase = function(phase) {
+    this.$$activatePhase = function(phase) {
         if(this.$$phase === phase) {
             throw "No way!"
         }
         this.$$phase = phase;
     };
     
-    this.$clearPhase = function() {
+    this.$$clearPhase = function() {
         this.$$phase = null;
     };
     
 	this.$$digestOnce = function() {
         var scope = this;
+        var listeners = this.$$arrOfListeners;
 		var foundChanges;
-		for(var i = 0; i < this.$$arrOfListeners.length; i++) {
-			var newVal = this.$$arrOfListeners[i].watchFn(scope);
-			var oldVal = this.$$arrOfListeners[i].previous;
+		for(var i = 0; i < listeners.length; i++) {
+			var newVal = this.$eval(listeners[i].watchFn);
+			var oldVal = listeners[i].previous;
 			if(oldVal === oldVal || newVal === newVal) {
 				if(!Utils.deepEqual(oldVal, newVal)) {
-					this.$$arrOfListeners[i].listenerFn(newVal, oldVal, scope);
+					listeners[i].listenerFn(newVal, oldVal, scope);
 					foundChanges = true;
-					this.$$arrOfListeners[i].previous = newVal;
+					listeners[i].previous = newVal;
 				}
 			}
 		}
@@ -49,9 +56,9 @@ function Scope() {
 	};
     
 	this.$digest = function() {
-		var counter = this.$$CONST.stopOn;
+		var counter = this.$$CONST.STOPON;
 		var foundChanges;
-        this.$activatePhase("$digest");
+        this.$$activatePhase("$digest");
 		do {
 			foundChanges = this.$$digestOnce();
 			counter--;
@@ -59,7 +66,7 @@ function Scope() {
 				throw "Limit is exceeded";
 			}
 		} while(foundChanges);
-        this.$clearPhase();
+        this.$$clearPhase();
 	};
     
     this.$eval = function(expr) {

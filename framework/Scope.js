@@ -9,12 +9,11 @@ function Scope() {
     this.$$CONST = {
         stopOn: 10
     };
-    
     this.$watch = function(watchFn, listenerFn) {
         var set = {
             watchFn: watchFn,
             listenerFn: listenerFn,
-            previous: null
+            previous: undefined 
         }
         this.$$arrOfListeners.push(set);
     };
@@ -33,15 +32,16 @@ function Scope() {
     };
     
 	this.$$digestOnce = function() {
+        var scope = this;
 		var foundChanges;
 		for(var i = 0; i < this.$$arrOfListeners.length; i++) {
-			var current = this.$$arrOfListeners[i].watchFn();
-			var previous = this.$$arrOfListeners[i].previous;
-			if(previous === previous || current === current) {
-				if(!utils.deepEquals(previous, current)) {
-					this.$$arrOfListeners[i].listenerFn();
+			var newVal = this.$$arrOfListeners[i].watchFn(scope);
+			var oldVal = this.$$arrOfListeners[i].previous;
+			if(oldVal === oldVal || newVal === newVal) {
+				if(!Utils.deepEqual(oldVal, newVal)) {
+					this.$$arrOfListeners[i].listenerFn(newVal, oldVal, scope);
 					foundChanges = true;
-					this.$$arrOfListeners[i].previous = current;
+					this.$$arrOfListeners[i].previous = newVal;
 				}
 			}
 		}
@@ -61,6 +61,10 @@ function Scope() {
 		} while(foundChanges);
         this.$clearPhase();
 	};
+    
+    this.$eval = function(expr) {
+        return expr(this);
+    };
 }
 
 

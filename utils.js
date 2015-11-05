@@ -17,7 +17,7 @@ function utilsSingletone() {
 		return res;
 	};
 	
-	this.deepEquals = function(obj1, obj2) {
+	this.deepEqual = function(obj1, obj2) {
 		if (obj1 === obj2) {
 			return true;
 		}
@@ -48,4 +48,4 @@ function utilsSingletone() {
 	};
 }
 
-var utils = new utilsSingletone();
+var Utils = new utilsSingletone();

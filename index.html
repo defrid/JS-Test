@@ -10,13 +10,35 @@
 <script src="utils.js"></script>
 <script src="framework/Scope.js";></script>
 <script>
-scopeTests.Test1();
-//scopeTests.Test2();
-scopeTests.Test3();
-scopeTests.Test4();
-//scopeTests.Test5();
-scopeTests.Test6();
-scopeTests.Test7();
+    scopeTests.Test1();
+    
+    //scopeTests.Test2();
+    
+    scopeTests.Test3();
+    
+    scopeTests.Test4();
+    
+    try {
+        scopeTests.Test5();
+    }
+    catch(err) {
+        console.warn(err);
+    };
+    
+    scopeTests.Test6();
+    
+    try {
+        scopeTests.Test7();
+    }
+    catch(err) {
+        console.warn(err);
+    };
+    
+    scopeTests.Test8();
+    
+    //scopeTests.Test9();
+    
+    //scopeTests.Test10();
 </script>
 </script>
 

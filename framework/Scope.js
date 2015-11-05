@@ -1,19 +1,37 @@
 function Scope() {
-	this.$$arrOfListeners = [];
-	this.$new = function() {
-		return new Scope();
-	};
-	this.CONST = {
-		stopOn: 10
-	}
-	this.$watch = function(watchFn, listenerFn) {
-		var set = {
-			watchFn: watchFn,
-			listenerFn: listenerFn,
-			previous: null
-		}
-		this.$$arrOfListeners.push(set);
-	}
+    
+    this.$$arrOfListeners = [];
+    
+    this.$new = function() {
+        return new Scope();
+    };
+    
+    this.$$CONST = {
+        stopOn: 10
+    };
+    
+    this.$watch = function(watchFn, listenerFn) {
+        var set = {
+            watchFn: watchFn,
+            listenerFn: listenerFn,
+            previous: null
+        }
+        this.$$arrOfListeners.push(set);
+    };
+    
+    this.$$phase = null;
+    
+    this.$activatePhase = function(phase) {
+        if(this.$$phase === phase) {
+            throw "No way!"
+        }
+        this.$$phase = phase;
+    };
+    
+    this.$clearPhase = function() {
+        this.$$phase = null;
+    };
+    
 	this.$$digestOnce = function() {
 		var foundChanges;
 		for(var i = 0; i < this.$$arrOfListeners.length; i++) {
@@ -29,9 +47,11 @@ function Scope() {
 		}
 		return foundChanges;
 	};
+    
 	this.$digest = function() {
-		var counter = this.CONST.stopOn;
+		var counter = this.$$CONST.stopOn;
 		var foundChanges;
+        this.$activatePhase("$digest");
 		do {
 			foundChanges = this.$$digestOnce();
 			counter--;
@@ -39,6 +59,7 @@ function Scope() {
 				throw "Limit is exceeded";
 			}
 		} while(foundChanges);
+        this.$clearPhase();
 	};
 }
 

@@ -3,13 +3,22 @@ function Scope() {
     this.$$arrOfListeners = [];
     
     this.$new = function() {
-        var children = new Scope ();
-        children.prototype = this;
-        children.prototype.constructor = children;
-        children.$$parent = this;
+        var child = new Scope ();
+        child.prototype = this;
+        child.prototype.constructor = child;
+        child.$$parent = this;
         this.$$children = [];
-        this.$$children.push(children);
-        return children;
+        
+        function pushAllChilds(child) {
+            while(this.hasOwnProperty("$$parent")) {
+                this.prototype.$$children.push(this);
+                child = child.prototype;
+            }
+        }
+        
+        pushAllChilds(child);
+        
+        return child;
     };
     
     this.$$CONST = {

@@ -7,19 +7,21 @@ function Scope() {
         child.prototype = this;
         child.prototype.constructor = child;
         child.$$parent = this;
-        this.$$children = [];
+        this.$$children.push(child);
         
-        function pushAllChilds(child) {
-            while(this.hasOwnProperty("$$parent")) {
-                this.prototype.$$children.push(this);
-                child = child.prototype;
+        function pushAllChilds(position, childToPush) {
+            if(position.hasOwnProperty("$$parent")) {
+                position.$$parent.$$children.push(childToPush);
+                pushAllChilds(position.$$parent, childToPush);                
             }
         }
         
-        pushAllChilds(child);
+        pushAllChilds(this, child);
         
         return child;
     };
+    
+    this.$$children = [];
     
     this.$$CONST = {
         STOPON: 10

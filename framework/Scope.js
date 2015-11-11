@@ -9,15 +9,6 @@ function Scope() {
         child.$$parent = this;
         this.$$children.push(child);
         
-        function pushAllChilds(position, childToPush) {
-            if(position.hasOwnProperty("$$parent")) {
-                position.$$parent.$$children.push(childToPush);
-                pushAllChilds(position.$$parent, childToPush);                
-            }
-        }
-        
-        pushAllChilds(this, child);
-        
         return child;
     };
     
@@ -57,9 +48,9 @@ function Scope() {
 			var oldVal = listeners[i].previous;
 			if(oldVal === oldVal || newVal === newVal) {
 				if(!Utils.deepEqual(oldVal, newVal)) {
+                    listeners[i].previous = Utils.deepCopy(newVal);
 					listeners[i].listenerFn(newVal, oldVal, scope);
 					foundChanges = true;
-					listeners[i].previous = newVal;
 				}
 			}
 		}
@@ -82,6 +73,16 @@ function Scope() {
     
     this.$eval = function(expr) {
         return expr(this);
+    };
+    
+    this.$destroy = function() {
+        this.$$parent.$$children.splice(this.$$parent.$$children.indexOf(this), 1);
+        delete this.$$parent;
+        var count = this.$$children.length;
+        while(count > 0) {
+            this.$$children[count - 1].$destroy();
+            count--;
+        }
     };
 }
 

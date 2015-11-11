@@ -33,19 +33,36 @@ function utilsSingletone() {
 		return true;
 	};
 	
-	this.deepCopy = function(obj) {
-		var newObj = {};
-			for(var key in obj) {
-				if(typeof obj[key] != "object" || obj[key] === null){
-					var property = obj[key];
-					newObj[key] = property;
-				}
-				else {
-					newObj[key] = this.deepCopy(obj[key]);
-				}
-			}
-		return newObj;
-	};
+	this.deepCopy = function deepCopy(obj) {
+        
+        if (typeof obj != 'object' && typeof obj != 'function') {
+            return obj;
+        }
+        
+        var copy;
+
+        if (typeof obj === 'function') {
+            var that = this;
+            copy = function() {
+                return that.apply(this, arguments);
+            }
+            for(var key in this) {
+                if (this.hasOwnProperty(key)) {
+                    copy[key] = this[key];
+                }
+            }
+        }
+        else {
+            copy = {};
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    copy[key] = this.deepCopy(obj[key]);
+                }
+            }
+        }
+        
+        return copy;
+    };
 }
 
 var Utils = new utilsSingletone();

@@ -19,6 +19,7 @@ function Scope() {
     var $$CONST = {
         STOPON: 10
     };
+
     this.$watch = function(watchFn, listenerFn) {
         var set = {
             watchFn: watchFn,
@@ -41,36 +42,36 @@ function Scope() {
         $$phase = null;
     };
     
-	function $$digestOnce() {
+    function $$digestOnce() {
         var listeners = $$arrOfListeners;
-		var foundChanges;
-		for(var i = 0; i < listeners.length; i++) {
-			var newVal = scope.$eval(listeners[i].watchFn);
-			var oldVal = listeners[i].previous;
-			if(oldVal === oldVal || newVal === newVal) {
-				if(!Utils.deepEqual(oldVal, newVal)) {
+        var foundChanges;
+        for(var i = 0; i < listeners.length; i++) {
+            var newVal = scope.$eval(listeners[i].watchFn);
+            var oldVal = listeners[i].previous;
+            if(oldVal === oldVal || newVal === newVal) {
+                if(!Utils.deepEqual(oldVal, newVal)) {
                     listeners[i].previous = Utils.deepCopy(newVal);
-					listeners[i].listenerFn(newVal, oldVal, scope);
-					foundChanges = true;
-				}
-			}
-		}
-		return foundChanges;
-	};
+                    listeners[i].listenerFn(newVal, oldVal, scope);
+                    foundChanges = true;
+                }
+            }
+        }
+        return foundChanges;
+    };
     
-	this.$digest = function() {
-		var counter = $$CONST.STOPON;
-		var foundChanges;
+    this.$digest = function() {
+        var counter = $$CONST.STOPON;
+        var foundChanges;
         $$activatePhase("$digest");
-		do {
-			foundChanges = $$digestOnce();
-			counter--;
-			if(counter === 0) {
-				throw "Limit is exceeded";
-			}
-		} while(foundChanges);
+        do {
+            foundChanges = $$digestOnce();
+            counter--;
+            if(counter === 0) {
+                throw "Limit is exceeded";
+            }
+        } while(foundChanges);
         $$clearPhase();
-	};
+    };
     
     this.$eval = function(expr) {
         return expr(scope);
@@ -78,11 +79,9 @@ function Scope() {
     
     this.$destroy = function() {
         scope.$$parent.$$children.splice(scope.$$parent.$$children.indexOf(scope), 1);
-        delete scope.$$parent;
-        var count = scope.$$children.length;
-        while(count > 0) {
+        scope.$$parent = null;
+        for(var count = scope.$$children.length; count > 0; count--) {
             scope.$$children[count - 1].$destroy();
-            count--;
         }
     };
 }
@@ -141,7 +140,7 @@ var scopeTests = {
         );
 
         console.assert(scope.counter === 0); //No changes
-		
+        
         scope.$digest();
         scope.$digest();
         console.assert(scope.counter === 1);
@@ -232,7 +231,7 @@ var scopeTests = {
         );
 
         scope.$digest();
-	
+    
         console.assert(scope.counter === 1); //NaN != NaN cause $digest to be always dirty
         console.log("Test6 Success");
     },

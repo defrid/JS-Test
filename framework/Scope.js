@@ -1,20 +1,22 @@
 function Scope() {
     
-    this.$$arrOfListeners = [];
+    var scope = this;
+    
+    var $$arrOfListeners = [];
     
     this.$new = function() {
         var child = new Scope ();
-        child.prototype = this;
+        child.prototype = scope;
         child.prototype.constructor = child;
-        child.$$parent = this;
-        this.$$children.push(child);
+        child.$$parent = scope;
+        scope.$$children.push(child);
         
         return child;
     };
     
     this.$$children = [];
     
-    this.$$CONST = {
+    var $$CONST = {
         STOPON: 10
     };
     this.$watch = function(watchFn, listenerFn) {
@@ -23,28 +25,27 @@ function Scope() {
             listenerFn: listenerFn,
             previous: undefined 
         }
-        this.$$arrOfListeners.push(set);
+        $$arrOfListeners.push(set);
     };
     
-    this.$$phase = null;
+    var $$phase = null;
     
-    this.$$activatePhase = function(phase) {
-        if(this.$$phase === phase) {
+    function $$activatePhase(phase) {
+        if($$phase === phase) {
             throw "No way!"
         }
-        this.$$phase = phase;
+        $$phase = phase;
     };
     
-    this.$$clearPhase = function() {
-        this.$$phase = null;
+    function $$clearPhase() {
+        $$phase = null;
     };
     
-	this.$$digestOnce = function() {
-        var scope = this;
-        var listeners = this.$$arrOfListeners;
+	function $$digestOnce() {
+        var listeners = $$arrOfListeners;
 		var foundChanges;
 		for(var i = 0; i < listeners.length; i++) {
-			var newVal = this.$eval(listeners[i].watchFn);
+			var newVal = scope.$eval(listeners[i].watchFn);
 			var oldVal = listeners[i].previous;
 			if(oldVal === oldVal || newVal === newVal) {
 				if(!Utils.deepEqual(oldVal, newVal)) {
@@ -58,29 +59,29 @@ function Scope() {
 	};
     
 	this.$digest = function() {
-		var counter = this.$$CONST.STOPON;
+		var counter = $$CONST.STOPON;
 		var foundChanges;
-        this.$$activatePhase("$digest");
+        $$activatePhase("$digest");
 		do {
-			foundChanges = this.$$digestOnce();
+			foundChanges = $$digestOnce();
 			counter--;
 			if(counter === 0) {
 				throw "Limit is exceeded";
 			}
 		} while(foundChanges);
-        this.$$clearPhase();
+        $$clearPhase();
 	};
     
     this.$eval = function(expr) {
-        return expr(this);
+        return expr(scope);
     };
     
     this.$destroy = function() {
-        this.$$parent.$$children.splice(this.$$parent.$$children.indexOf(this), 1);
-        delete this.$$parent;
-        var count = this.$$children.length;
+        scope.$$parent.$$children.splice(scope.$$parent.$$children.indexOf(scope), 1);
+        delete scope.$$parent;
+        var count = scope.$$children.length;
         while(count > 0) {
-            this.$$children[count - 1].$destroy();
+            scope.$$children[count - 1].$destroy();
             count--;
         }
     };

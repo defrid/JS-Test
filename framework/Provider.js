@@ -1,3 +1,40 @@
+function providerSingletone() {
+
+	if(providerSingletone.check) {
+        return providerSingletone.check;
+    }
+    else if(this === window) {
+        return new providerSingletone();
+    }
+    
+    providerSingletone.check = this;
+
+    var $$providerDictionary = {};
+
+    var $$cache = {};
+
+    $$cache.$rootScope = new Scope();
+
+    this.$register = function(name, func) {
+		$$providerDictionary[name] = func;
+    };
+
+    this.$$annotate = function(func) {
+    	var oddStep = func.toString();
+    	var evenStep = oddStep.split('(');
+    	evenStep.splice(0, 1);
+    	oddStep = evenStep.join();
+    	evenStep = oddStep.split(')');
+    	evenStep.splice(1, 1);
+    	oddStep = evenStep.join();
+    	evenStep = oddStep.split(', ');
+
+    	return evenStep;
+    };
+}
+
+var Provider = new providerSingletone();
+
 var providerTests = {
     Test1: function() {
         console.assert(Provider && typeof Provider == 'object');

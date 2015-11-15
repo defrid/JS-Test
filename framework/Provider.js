@@ -11,25 +11,20 @@ function providerSingletone() {
 
     var $$providerDictionary = {};
 
-    var $$cache = {};
-
-    $$cache.$rootScope = new Scope();
+    var $$cache = {
+    	$rootScope: new Scope()
+    };
 
     this.$register = function(name, func) {
 		$$providerDictionary[name] = func;
     };
 
     this.$$annotate = function(func) {
-    	var oddStep = func.toString();
-    	var evenStep = oddStep.split('(');
-    	evenStep.splice(0, 1);
-    	oddStep = evenStep.join();
-    	evenStep = oddStep.split(')');
-    	evenStep.splice(1, 1);
-    	oddStep = evenStep.join();
-    	evenStep = oddStep.split(', ');
+    	var funcToString = func.toString();
+    	var paramsAsString = funcToString.match(/\(([^)]+)\)/)[1];
+    	var paramsAsArray = paramsAsString.split(/,\s/g);
 
-    	return evenStep;
+    	return paramsAsArray;
     };
 }
 

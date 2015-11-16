@@ -1,6 +1,6 @@
 function providerSingletone() {
 
-	if(providerSingletone.check) {
+    if(providerSingletone.check) {
         return providerSingletone.check;
     }
     else if(this === window) {
@@ -9,22 +9,32 @@ function providerSingletone() {
     
     providerSingletone.check = this;
 
+    var provider = this;
+
     var $$providerDictionary = {};
 
     var $$cache = {
-    	$rootScope: new Scope()
+        $rootScope: new Scope()
     };
 
     this.$register = function(name, func) {
-		$$providerDictionary[name] = func;
+        $$providerDictionary[name] = func;
     };
 
     this.$$annotate = function(func) {
-    	var funcToString = func.toString();
-    	var paramsAsString = funcToString.match(/\(([^)]+)\)/)[1];
-    	var paramsAsArray = paramsAsString.split(/,\s/g);
+        var funcToString = func.toString();
+        var paramsAsString = funcToString.match(/\(([^)]+)\)/)[1];
+        var paramsAsArray = paramsAsString.split(/,\s/g);
 
-    	return paramsAsArray;
+        return paramsAsArray;
+    };
+
+    this.$invoke = function(func) {
+        var key = provider.$$annotate(func).toString();
+        func.apply(provider, arguments);
+        if($$providerDictionary.hasOwnProperty(key)) {
+            provider.$invoke($$providerDictionary[key]);
+        }
     };
 }
 
@@ -60,8 +70,8 @@ var providerTests = {
             called = true;
         }
 
-		var ServiceCalled = false;
-		var FactoryCalled = false;
+        var ServiceCalled = false;
+        var FactoryCalled = false;
 
         //Just example of Service realisation, does nothing right now
         Provider.$register("Service", function(Factory) {
@@ -116,6 +126,7 @@ var providerTests = {
         var res = Provider.$get("Sample");
 
         console.assert(res());
+
         console.assert(ServiceCalled);
         console.assert(FactoryCalled);
 

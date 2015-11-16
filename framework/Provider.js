@@ -30,11 +30,25 @@ function providerSingletone() {
     };
 
     this.$invoke = function(func) {
-        var key = provider.$$annotate(func).toString();
-        func.apply(provider, arguments);
-        if($$providerDictionary.hasOwnProperty(key)) {
-            provider.$invoke($$providerDictionary[key]);
+        var originFunction = func;
+
+        function applyAllDependencies(dependency) {
+            var key = provider.$$annotate(dependency).toString();
+            dependency.apply(provider, arguments);
+            if($$providerDictionary.hasOwnProperty(key)) {
+                applyAllDependencies($$providerDictionary[key]);
+            }
+            return null;
         }
+
+        applyAllDependencies(originFunction);
+
+        return originFunction(provider, arguments);
+    };
+
+    this.$get = function(providerName) {
+        $$cache.providerName = provider.$invoke($$providerDictionary[providerName]);
+        return $$cache.providerName;
     };
 }
 

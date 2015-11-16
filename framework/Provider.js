@@ -6,7 +6,7 @@ function providerSingletone() {
     else if(this === window) {
         return new providerSingletone();
     }
-    
+
     providerSingletone.check = this;
 
     var provider = this;
@@ -79,26 +79,33 @@ var providerTests = {
     Test3: function() {
         var called = false;
 
-        function Sample(Service) {
-            console.assert(!!Service);
-            called = true;
-        }
-
         var ServiceCalled = false;
         var FactoryCalled = false;
+
+        function Sample(Service) {
+            console.assert(Service());
+            called = true;
+        }
 
         //Just example of Service realisation, does nothing right now
         Provider.$register("Service", function(Factory) {
             console.log("Service called");
             ServiceCalled = true;
-            return function() {};
+
+			console.assert(Factory());
+
+            return function() {
+				return true;
+			};
         });
 
         //Just example of Service realisation, does nothing right now
         Provider.$register("Factory", function($rootScope) {
             console.log("Factory called");
             FactoryCalled = true;
-            return function() {};
+            return function() {
+				return true;
+			};
         });
 
         Provider.$invoke(Sample);

@@ -34,7 +34,7 @@ function providerSingletone() {
         var providers = [];
         for(var i = 0; i < arrOfArgs.length; i++) {
             if($$providers.hasOwnProperty(arrOfArgs[i])) {
-                providers.push(provider.$invoke($$providers[arrOfArgs[i]]));
+                providers.push(provider.$get(arrOfArgs[i]));
             }
         }
         return func.apply(null, providers);

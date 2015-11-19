@@ -11,14 +11,14 @@ function providerSingletone() {
 
     var provider = this;
 
-    var $$providerDictionary = {};
+    var $$providers = {};
 
     var $$cache = {
         $rootScope: new Scope()
     };
 
     this.$register = function(name, func) {
-        $$providerDictionary[name] = func;
+        $$providers[name] = func;
     };
 
     this.$$annotate = function(func) {
@@ -30,24 +30,16 @@ function providerSingletone() {
     };
 
     this.$invoke = function(func) {
-        var originFunction = func;
-
-        function applyAllDependencies(dependency) {
-            var key = provider.$$annotate(dependency).toString();
-            dependency.apply(provider, arguments);
-            if($$providerDictionary.hasOwnProperty(key)) {
-                applyAllDependencies($$providerDictionary[key]);
+        var arrOfArgs = provider.$$annotate(func);
+        for(var i = 0; i < arrOfArgs.length; i++) {
+            if($$providers.hasOwnProperty(arrOfArgs[i])) {
+                return func.apply(null, [$$providers[arrOfArgs[i]], provider.$invoke($$providers[arrOfArgs[i]])]);
             }
-            return null;
-        }
-
-        applyAllDependencies(originFunction);
-
-        return originFunction(provider, arguments);
+        }        
     };
 
     this.$get = function(providerName) {
-        $$cache.providerName = provider.$invoke($$providerDictionary[providerName]);
+        $$cache.providerName = provider.$invoke($$providers[providerName]);
         return $$cache.providerName;
     };
 }
@@ -83,6 +75,7 @@ var providerTests = {
         var FactoryCalled = false;
 
         function Sample(Service) {
+            console.log("Sample called");
             console.assert(Service());
             called = true;
         }

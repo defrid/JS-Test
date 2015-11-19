@@ -31,11 +31,13 @@ function providerSingletone() {
 
     this.$invoke = function(func) {
         var arrOfArgs = provider.$$annotate(func);
+        var providers = [];
         for(var i = 0; i < arrOfArgs.length; i++) {
             if($$providers.hasOwnProperty(arrOfArgs[i])) {
-                return func.apply(null, [$$providers[arrOfArgs[i]], provider.$invoke($$providers[arrOfArgs[i]])]);
+                providers.push(provider.$invoke($$providers[arrOfArgs[i]]));
             }
-        }        
+        }
+        return func.apply(null, providers);
     };
 
     this.$get = function(providerName) {

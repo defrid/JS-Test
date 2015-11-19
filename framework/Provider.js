@@ -41,8 +41,14 @@ function providerSingletone() {
     };
 
     this.$get = function(providerName) {
-        $$cache.providerName = provider.$invoke($$providers[providerName]);
-        return $$cache.providerName;
+        if(typeof($$providers[providerName]) != "function") {
+            return null;
+        }
+        if($$cache[providerName]) {
+            return $$cache[providerName];
+        }
+        $$cache[providerName] = provider.$invoke($$providers[providerName]);
+        return $$cache[providerName];
     };
 }
 

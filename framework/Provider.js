@@ -29,25 +29,28 @@ function providerSingletone() {
         return paramsAsArray;
     };
 
-    this.$invoke = function(func) {
+    this.$invoke = function(func, locals) {
         var arrOfArgs = provider.$$annotate(func);
         var providers = [];
         for(var i = 0; i < arrOfArgs.length; i++) {
-            if($$providers.hasOwnProperty(arrOfArgs[i])) {
+            if(locals && locals.hasOwnProperty(arrOfArgs[i])) {
+                providers.push(locals[arrOfArgs[i]]);
+            }
+            else if($$providers.hasOwnProperty(arrOfArgs[i])) {
                 providers.push(provider.$get(arrOfArgs[i]));
             }
         }
         return func.apply(null, providers);
     };
 
-    this.$get = function(providerName) {
-        if(typeof($$providers[providerName]) != "function") {
-            return null;
-        }
+    this.$get = function(providerName, locals) {
         if($$cache[providerName]) {
             return $$cache[providerName];
         }
-        $$cache[providerName] = provider.$invoke($$providers[providerName]);
+        if(typeof($$providers[providerName]) != "function") {
+            return null;
+        }
+        $$cache[providerName] = provider.$invoke($$providers[providerName], locals);
         return $$cache[providerName];
     };
 }
@@ -119,38 +122,38 @@ var providerTests = {
     },
 
     Test4: function() {
-        function Sample(Service) {
-            console.assert(!!Service);
+        function Foo(Bar) {
+            console.assert(!!Foo);
             return function() {
                 return true;
             };
         }
 
-        var ServiceCalled = false;
-        var FactoryCalled = false;
+        var BarCalled = false;
+        var FooBarCalled = false;
 
         //Just example of Service realisation, does nothing right now
-        Provider.$register("Service", function(Factory) {
-            console.log("Service called");
-            ServiceCalled = true;
+        Provider.$register("Bar", function(FooBar) {
+            console.log("Bar called");
+            BarCalled = true;
             return function() {};
         });
 
         //Just example of Service realisation, does nothing right now
-        Provider.$register("Factory", function($rootScope) {
-            console.log("Factory called");
-            FactoryCalled = true;
+        Provider.$register("FooBar", function($rootScope) {
+            console.log("FooBar called");
+            FooBarCalled = true;
             return function() {};
         });
 
-        Provider.$register("Sample", Sample);
+        Provider.$register("Foo", Foo);
 
-        var res = Provider.$get("Sample");
+        var res = Provider.$get("Foo");
 
         console.assert(res());
 
-        console.assert(ServiceCalled);
-        console.assert(FactoryCalled);
+        console.assert(BarCalled);
+        console.assert(FooBarCalled);
 
         console.log("Test4 Success");
     },

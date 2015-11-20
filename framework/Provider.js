@@ -36,7 +36,7 @@ function providerSingletone() {
     this.$invoke = function(func, locals) {
         var arrOfArgs = provider.$$annotate(func);
         var providers = [];
-        for(var i = 0; i < arrOfArgs.length; i++) {
+        for(var i = 0; i < arrOfArgs.length; i++) { 
             if(locals && locals.hasOwnProperty(arrOfArgs[i])) {
                 providers.push(locals[arrOfArgs[i]]);
             }
@@ -48,6 +48,9 @@ function providerSingletone() {
     };
 
     this.$get = function(providerName, locals) {
+        if(Utils.deepEqual(providerName.match(/-controller/g), ["-controller"])) {
+            return $$providers[providerName];
+        }
         if($$cache[providerName]) {
             return $$cache[providerName];
         }
@@ -62,7 +65,13 @@ function providerSingletone() {
 
     this.directive = function(name, func) {
         $$providers[name + provider.DIRECTIVE_POSTFIX] = func;
-    }
+    };
+
+    this.CONTROLLER_POSTFIX = "-controller";
+
+    this.Controller = function(name, func) {
+        $$providers[name + provider.CONTROLLER_POSTFIX] = func;
+    };
 }
 
 var Provider = new providerSingletone();

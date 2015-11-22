@@ -48,9 +48,6 @@ function providerSingletone() {
     };
 
     this.$get = function(providerName, locals) {
-        if(Utils.deepEqual(providerName.match(/-controller/g), ["-controller"])) {
-            return $$providers[providerName];
-        }
         if($$cache[providerName]) {
             return $$cache[providerName];
         }
@@ -70,7 +67,9 @@ function providerSingletone() {
     this.CONTROLLER_POSTFIX = "-controller";
 
     this.Controller = function(name, func) {
-        $$providers[name + provider.CONTROLLER_POSTFIX] = func;
+        $$providers[name + provider.CONTROLLER_POSTFIX] = function() {
+            return func;
+        };
     };
 }
 

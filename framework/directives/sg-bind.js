@@ -2,8 +2,8 @@ Provider.directive("sg-bind", function() {
     return {
         hasScope: false,
         link: function(scope, element, expr) {
+            element.innerHTML = scope.bindTest;
             scope.$watch(expr, function() {element.innerHTML = scope.bindTest});
-            scope.$digest();
         }
     };
 });

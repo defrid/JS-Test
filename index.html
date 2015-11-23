@@ -11,6 +11,7 @@
 <script src="framework/Scope.js"></script>
 <script src="framework/Provider.js"></script>
 <script src="framework/directives/sg-bind.js"></script>
+<script src="framework/directives/sg-controller.js"></script>
 <script>
     scopeTests.Test1();
 
@@ -64,7 +65,7 @@
 
 <body>
 
-    <div id="bind">Test</div>
+        <div id="bind"></div>
 
         <div id="dir-test" sg-controller="Ctrl" sg-bind="value"></div>
 
@@ -97,6 +98,10 @@
         </div>-->
 <script>
     bindTests.Test1();
+</script>
+
+<script>
+    controllerTests.Test1();
 </script>
 
 </body>

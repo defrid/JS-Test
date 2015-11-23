@@ -3,6 +3,7 @@ Provider.directive("sg-bind", function() {
         hasScope: false,
         link: function(scope, element, expr) {
             scope.$watch(expr, function() {element.innerHTML = scope.bindTest});
+            scope.$digest();
         }
     };
 });

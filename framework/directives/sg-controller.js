@@ -3,6 +3,10 @@ Provider.directive("sg-controller", function() {
         hasScope: true,
         link: function(scope, element, expr) {
             var controller = Provider.$get(expr + Provider.CONTROLLER_POSTFIX);
+            var arrOfArgs = Provider.$$annotate(controller);
+            for(var i = 0; i < arrOfArgs.length; i++) {
+                Provider.$get(arrOfArgs[i]);
+            }
             controller(scope);
         }
     };
@@ -32,15 +36,15 @@ var controllerTests = {
     Test2: function() {
         var controller = Provider.$get("sg-controller" + Provider.DIRECTIVE_POSTFIX);
 
-        Provider.Controller("Ctrl2", function ($scope, Factory) {
+        Provider.Controller("Ctrl2", function ($scope, Factory1) {
             $scope.value = true;
         });
 
         console.assert(controller);
         console.assert(controller.hasScope);
 
-        Provider.$register("Factory", function ($rootScope) {
-            console.log("Factory called");
+        Provider.$register("Factory1", function ($rootScope) {
+            console.log("Factory1 called");
             return function () { };
         });
 

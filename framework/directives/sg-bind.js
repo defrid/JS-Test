@@ -1,3 +1,12 @@
+Provider.directive("sg-bind", function() {
+    return {
+        hasScope: false,
+        link: function(scope, element, expr) {
+            scope.$watch(expr, function() {element.innerHTML = scope.bindTest});
+        }
+    };
+});
+
 var bindTests = {
     Test1: function() {
         var bind = Provider.$get("sg-bind" + Provider.DIRECTIVE_POSTFIX)

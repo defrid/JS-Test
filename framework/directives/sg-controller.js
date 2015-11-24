@@ -3,11 +3,7 @@ Provider.directive("sg-controller", function() {
         hasScope: true,
         link: function(scope, element, expr) {
             var controller = Provider.$get(expr + Provider.CONTROLLER_POSTFIX);
-            var arrOfArgs = Provider.$$annotate(controller);
-            for(var i = 0; i < arrOfArgs.length; i++) {
-                Provider.$get(arrOfArgs[i]);
-            }
-            controller(scope);
+            Provider.$invoke(controller, {$scope: scope});
         }
     };
 });

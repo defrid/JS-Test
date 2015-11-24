@@ -12,11 +12,11 @@ function compilerSingltone() {
         var attributes = element.attributes;
         var dirs = [];
         for(var i = 0; i < attributes.length; i++) {
-            var check = Provider.$get(attributes[i].nodeName + Provider.DIRECTIVE_POSTFIX);
-            if(check) {
+            var directiveConfig = Provider.$get(attributes[i].nodeName + Provider.DIRECTIVE_POSTFIX);
+            if(directiveConfig) {
                 dirs.push({
                     expr: attributes[i].nodeValue,
-                    config: check
+                    config: directiveConfig
                 });
             }
         }

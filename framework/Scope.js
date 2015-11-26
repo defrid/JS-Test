@@ -74,7 +74,26 @@ function Scope() {
     };
     
     this.$eval = function(expr) {
-        return expr(scope);
+        if(typeof expr === "function") {
+            return expr(scope);
+        }
+        if(typeof(expr === "string")) {
+            var exprAsArray = expr.split(/\./);
+
+            if(exprAsArray.length === 1) {
+                if(this.hasOwnProperty(exprAsArray[0]) && typeof this[exprAsArray[0]] != "function") {
+                    return this[expr];
+                }
+                if(typeof this[exprAsArray[0]] === "function") {
+                    return this[expr](scope);
+                }
+            }
+
+            if(exprAsArray.length > 1) {
+                var nextExpr = exprAsArray.slice(1).join(".");
+                return scope.$eval.call(this[exprAsArray[0]], nextExpr);
+            }
+        }
     };
     
     this.$destroy = function() {
@@ -82,6 +101,18 @@ function Scope() {
         scope.$$parent = null;
         for(var count = scope.$$children.length; count > 0; count--) {
             scope.$$children[count - 1].$destroy();
+        }
+    };
+
+    this.$set = function(property, value) {
+        var propertyAsArray = property.split(/\./);
+
+        if(propertyAsArray.length === 1) {
+            this[propertyAsArray[0]] = value;
+        }
+        else if(propertyAsArray.length > 1) {
+            var nextProperty = propertyAsArray.slice(1).join(".");
+            return scope.$set.call(this[propertyAsArray[0]], nextProperty, value);
         }
     };
 }

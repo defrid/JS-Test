@@ -27,18 +27,19 @@ function compilerSingltone() {
 
     this.$compile = function(scope, element) {
         var dirs = compiler.$$getElementDirectives(element);
+        var ownScope;
         for(var i = 0; i < dirs.length; i++) {
             if(dirs[i].config.hasScope) {
-                element.scope = scope.$new();
+                ownScope = scope.$new();
             } else {
-                element.scope = element.parentNode.scope;
+                ownScope = scope;
             }
-            dirs[i].config.link(element.scope, element, dirs[i].expr);
+            dirs[i].config.link(ownScope, element, dirs[i].expr);
         }
 
-        var childs = element.getElementsByTagName("*");
+        var childs = element.children;
         for(var i = 0; i < childs.length; i++) {
-            compiler.$compile(scope, childs[i]);
+            compiler.$compile(ownScope, childs[i]);
         }
     };
 }

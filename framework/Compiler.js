@@ -30,19 +30,22 @@ function compilerSingltone() {
         var ownScope;
         for(var i = 0; i < dirs.length; i++) {
             if(dirs[i].config.hasScope) {
-                ownScope = scope.$new();
-            } else {
-                ownScope = scope;
+                scope = scope.$new();
             }
-            dirs[i].config.link(ownScope, element, dirs[i].expr);
+            dirs[i].config.link(scope, element, dirs[i].expr);
         }
 
         var childs = element.children;
         for(var i = 0; i < childs.length; i++) {
-            compiler.$compile(ownScope, childs[i]);
+            compiler.$compile(scope, childs[i]);
         }
     };
-}
+
+    this.$compileRoot = function() {
+       var $rootScope = Provider.$get('$rootScope');
+       compiler.$compile($rootScope, document.children[0]);
+    };
+} 
 
 var Compiler = new compilerSingltone();
 

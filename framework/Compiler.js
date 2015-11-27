@@ -8,6 +8,8 @@ function compilerSingltone() {
 
     compilerSingltone.check = this;
 
+    var compiler = this;
+
     this.$$getElementDirectives = function(element) {
         var attributes = element.attributes;
         var dirs = [];
@@ -21,6 +23,24 @@ function compilerSingltone() {
             }
         }
         return dirs;
+    };
+
+    this.$compile = function(scope, element) {
+        var dirs = compiler.$$getElementDirectives(element);
+        for(var i = 0; i < dirs.length; i++) {
+            if(dirs[i].config.hasScope) {
+                element.scope = scope.$new();
+                dirs[i].config.link(element.scope, element, dirs[i].expr);
+            } else {
+                element.scope = element.parentNode.scope;
+                dirs[i].config.link(element.scope, element, dirs[i].expr);
+            }
+        }
+
+        var childs = element.getElementsByTagName("*");
+        for(var i = 0; i < childs.length; i++) {
+            compiler.$compile(scope, childs[i]);
+        }
     };
 }
 

@@ -78,14 +78,14 @@ function Scope() {
             return expr(scope);
         }
         if(typeof(expr === "string")) {
-            var exprAsArray = expr.split(/\./);
+            var exprAsArray = expr.match(/\b\w+\b/g);
 
             if(exprAsArray.length === 1) {
                 if(this.hasOwnProperty(exprAsArray[0]) && typeof this[exprAsArray[0]] != "function") {
-                    return this[expr];
+                    return this[exprAsArray[0]];
                 }
                 if(typeof this[exprAsArray[0]] === "function") {
-                    return this[expr](scope);
+                    return this[exprAsArray[0]](scope);
                 }
             }
 

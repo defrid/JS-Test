@@ -30,11 +30,10 @@ function compilerSingltone() {
         for(var i = 0; i < dirs.length; i++) {
             if(dirs[i].config.hasScope) {
                 element.scope = scope.$new();
-                dirs[i].config.link(element.scope, element, dirs[i].expr);
             } else {
                 element.scope = element.parentNode.scope;
-                dirs[i].config.link(element.scope, element, dirs[i].expr);
             }
+            dirs[i].config.link(element.scope, element, dirs[i].expr);
         }
 
         var childs = element.getElementsByTagName("*");

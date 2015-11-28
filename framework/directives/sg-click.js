@@ -1,3 +1,15 @@
+Provider.directive("sg-click", function() {
+    return {
+        hasScope: false,
+        link: function(scope, element, expr) {
+            element.click = function() { 
+                return scope.$eval(expr);
+            };
+            scope.$digest();
+        }
+    };
+});
+
 var localScope = null;
 
 var clickTests = {

@@ -13,6 +13,7 @@
 <script src="framework/directives/sg-bind.js"></script>
 <script src="framework/directives/sg-controller.js"></script>
 <script src="framework/Compiler.js"></script>
+<script src="framework/directives/sg-click.js"></script>
 <script>
     scopeTests.Test1();
 
@@ -77,12 +78,12 @@
         <div id="compile-test" sg-controller="MainCtrl">
             <span id="compile-inner" sg-bind="value()"></span>
         </div>
-        <!--<div sg-controller="ClickCtrl">
+        <div id="clCtrl" sg-controller="ClickCtrl">
             <button id="clickBtn" sg-click="Click()">Click me</button>
-            <span sg-bind="value"></span>
+            <!--<span sg-bind="value"></span>
             <input sg-model="value">
-            <span sg-model="value"></span>
-        </div>-->
+            <span sg-model="value"></span>-->
+        </div>
         <!--<div sg-controller="RepeatCtrl">
             <div class="repeatParent" sg-repeat="item in data">
             <span sg-bind="item.value"></span>
@@ -113,6 +114,11 @@
 <script>
     compilerTests.Test1();
     compilerTests.Test2();
+</script>
+
+<script>
+    clickTests.init();
+    clickTests.Test1();
 </script>
 
 </body>

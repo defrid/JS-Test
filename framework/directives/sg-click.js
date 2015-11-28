@@ -2,10 +2,10 @@ Provider.directive("sg-click", function() {
     return {
         hasScope: false,
         link: function(scope, element, expr) {
-            element.click = function() { 
-                return scope.$eval(expr);
+            element.onclick = function() {
+                scope.$eval(expr);
+                scope.$digest();
             };
-            scope.$digest();
         }
     };
 });

@@ -27,7 +27,6 @@ function compilerSingltone() {
 
     this.$compile = function(scope, element) {
         var dirs = compiler.$$getElementDirectives(element);
-        var ownScope;
         for(var i = 0; i < dirs.length; i++) {
             if(dirs[i].config.hasScope) {
                 scope = scope.$new();

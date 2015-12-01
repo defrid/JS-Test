@@ -14,6 +14,7 @@
 <script src="framework/directives/sg-controller.js"></script>
 <script src="framework/Compiler.js"></script>
 <script src="framework/directives/sg-click.js"></script>
+<script src="framework/directives/sg-repeat.js"></script>
 <script>
     scopeTests.Test1();
 
@@ -84,12 +85,12 @@
             <!--<input sg-model="value">
             <span sg-model="value"></span>-->
         </div>
-        <!--<div sg-controller="RepeatCtrl">
+        <div id="rpCtrl" sg-controller="RepeatCtrl">
             <div class="repeatParent" sg-repeat="item in data">
-            <span sg-bind="item.value"></span>
-            <span>|</span>
+                <span sg-bind="item.value"></span>
+                <span>|</span>
+            </div>
         </div>
-        </div>-->
         <!--<div sg-controller="ModelCtrl">
             <span id="model-span" sg-model="data.value"></span>
             <input id="model-input" sg-model="data.value">
@@ -119,6 +120,11 @@
 <script>
     clickTests.init();
     clickTests.Test1();
+</script>
+
+<script>
+    repeatTests.init();
+    repeatTests.Test1();
 </script>
 
 </body>

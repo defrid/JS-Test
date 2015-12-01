@@ -27,7 +27,12 @@ function compilerSingltone() {
 
     this.$compile = function(scope, element) {
         var dirs = compiler.$$getElementDirectives(element);
+        var transclude;
         for(var i = 0; i < dirs.length; i++) {
+            if(dirs[i].config.transclude) {
+                transclude = true;
+            }
+
             if(dirs[i].config.hasScope) {
                 scope = scope.$new();
             }
@@ -36,8 +41,11 @@ function compilerSingltone() {
 
         var childs = element.children;
         for(var i = 0; i < childs.length; i++) {
-            compiler.$compile(scope, childs[i]);
+            if(!transclude) {
+                transclude = compiler.$compile(scope, childs[i]);
+            }
         }
+        return transclude;
     };
 
     this.$compileRoot = function() {

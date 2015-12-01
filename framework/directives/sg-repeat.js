@@ -1,3 +1,42 @@
+Provider.directive("sg-repeat", function() {
+    return {
+        hasScope: false,
+        transclude: true,
+        link: function(scope, element, expr) {
+            var itemName = expr.match(/(\w+)\s+in\s+(\w+)/)[1]
+            var arrName = expr.match(/(\w+)\s+in\s+(\w+)/)[2];
+            var parentElement = element.parentElement;
+
+            function repeat(scope, element, parentElement, itemName, arrName) {
+                for(var i = 0; i < scope[arrName].length; i++) {
+                    var childScope = scope.$new();
+                    childScope[itemName] = scope[arrName][i];
+                    var newElement = element.cloneNode(true);
+                    parentElement.appendChild(newElement);
+                    for(var j = 0; j < newElement.children.length; j++) {
+                        Compiler.$compile(childScope, newElement.children[j]);
+                    }
+                }
+                parentElement.removeChild(parentElement.children[0]);
+            }
+
+            repeat(scope, element, parentElement, itemName, arrName);
+
+            scope.$watch(function() {
+                             return scope[arrName]; 
+                         },
+                         
+                         function() { 
+                             while(parentElement.children[1]) {
+                                 parentElement.removeChild(parentElement.children[1]);
+                             }
+                             repeat(scope, element, parentElement, itemName, arrName);
+                         }
+            );
+        }
+    };
+});
+
 var repeatScope = Provider.$get('$rootScope');
 
 function repeatScopeTest($scope) {

@@ -18,14 +18,6 @@ function utilsSingletone() {
         };
         return res;
     };
-    
-    this.countObjLength = function(obj) {
-        var counter = 0;
-        for(var property in obj) {
-            counter++;
-        }
-        return counter;
-    }
 
     this.deepEqual = function(obj1, obj2) {
         if (obj1 === obj2) {
@@ -35,10 +27,7 @@ function utilsSingletone() {
             return false;
         }
 
-        var obj1Length = utils.countObjLength(obj1);
-        var obj2Length = utils.countObjLength(obj2);
-
-        if(obj1Length != obj2Length) {
+        if(Object.keys(obj1).length != Object.keys(obj2).length) {
             return false;
         }
 

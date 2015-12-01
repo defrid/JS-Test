@@ -8,6 +8,8 @@ function utilsSingletone() {
     }
     
     utilsSingletone.check = this;
+
+    var utils = this;
     
     this.reduce = function(arr, combine) {
         var res = arr[0];
@@ -17,6 +19,14 @@ function utilsSingletone() {
         return res;
     };
     
+    this.countObjLength = function(obj) {
+        var counter = 0;
+        for(var property in obj) {
+            counter++;
+        }
+        return counter;
+    }
+
     this.deepEqual = function(obj1, obj2) {
         if (obj1 === obj2) {
             return true;
@@ -24,9 +34,16 @@ function utilsSingletone() {
         if (typeof(obj1) != "object" || obj1 === null || typeof(obj2) != "object" || obj2 === null) {
             return false;
         }
- 
+
+        var obj1Length = utils.countObjLength(obj1);
+        var obj2Length = utils.countObjLength(obj2);
+
+        if(obj1Length != obj2Length) {
+            return false;
+        }
+
         for (var property in obj1) {
-            if (!(obj1.hasOwnProperty(property) && obj2.hasOwnProperty(property)) || !deepEqual(obj1[property], obj2[property])) {
+            if (!(obj1.hasOwnProperty(property) && obj2.hasOwnProperty(property)) || !utils.deepEqual(obj1[property], obj2[property])) {
                 return false;        
             }
         }

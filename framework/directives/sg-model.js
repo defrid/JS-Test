@@ -12,7 +12,11 @@ Provider.directive("sg-model", function() {
                 copy[exprAsArray[exprAsArray.length - 1]] = element.value;
             }
 
-            function handlerOnClick() {
+            if(element.nodeName === "INPUT" || element.nodeName === "TEXTAREA") {
+                element.addEventListener("input", handlerOnInput);
+            }
+
+            function listener() {
                 if(element.nodeName === "INPUT" || element.nodeName === "TEXTAREA") {
                     element.value = scope.$eval(expr);
                 } else {
@@ -20,13 +24,7 @@ Provider.directive("sg-model", function() {
                 }   
             }
 
-            if(element.nodeName === "INPUT" || element.nodeName === "TEXTAREA") {
-                element.addEventListener("input", handlerOnInput);
-            } else {
-               element.addEventListener("click", handlerOnClick); 
-            }
-
-            scope.$watch(expr, handlerOnClick);
+            scope.$watch(expr, listener);
         }
     };
 });

@@ -1,0 +1,22 @@
+{
+  "name": "jscourse",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/defrid/JS-Test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/defrid/JS-Test/issues"
+  },
+  "homepage": "https://github.com/defrid/JS-Test#readme",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}

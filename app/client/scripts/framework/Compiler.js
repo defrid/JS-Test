@@ -40,9 +40,9 @@ function compilerSingltone() {
         }
 
         var childs = element.children;
-        for(var i = 0; i < childs.length; i++) {
+        for(var j = 0; j < childs.length; j++) {
             if(!transclude) {
-                transclude = compiler.$compile(scope, childs[i]);
+                transclude = compiler.$compile(scope, childs[j]);
             }
         }
         return transclude;

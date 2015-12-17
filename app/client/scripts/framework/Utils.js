@@ -15,7 +15,7 @@ function utilsSingletone() {
         var res = arr[0];
         for(i = 1; i < arr.length; i ++) {
             res = combine(res, arr[i]); 
-        };
+        }
         return res;
     };
 
@@ -51,7 +51,7 @@ function utilsSingletone() {
             var that = this;
             copy = function() {
                 return that.apply(this, arguments);
-            }
+            };
             for(var key in this) {
                 if (this.hasOwnProperty(key)) {
                     copy[key] = this[key];
@@ -60,9 +60,9 @@ function utilsSingletone() {
         }
         else {
             copy = {};
-            for (var key in obj) {
-                if (obj.hasOwnProperty(key)) {
-                    copy[key] = this.deepCopy(obj[key]);
+            for (var prop in obj) {
+                if (obj.hasOwnProperty(prop)) {
+                    copy[prop] = this.deepCopy(obj[prop]);
                 }
             }
         }

@@ -25,7 +25,7 @@ function Scope() {
             watchFn: watchFn,
             listenerFn: listenerFn,
             previous: undefined 
-        }
+        };
         $$arrOfListeners.push(set);
     };
     
@@ -33,7 +33,7 @@ function Scope() {
     
     function $$activatePhase(phase) {
         if($$phase === phase) {
-            throw "No way!"
+            throw "No way!";
         }
         $$phase = phase;
     };
@@ -116,5 +116,3 @@ function Scope() {
         }
     };
 }
-
-var $rootScope = new Scope();

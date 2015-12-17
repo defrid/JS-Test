@@ -3,7 +3,7 @@ Provider.directive("sg-repeat", function() {
         hasScope: false,
         transclude: true,
         link: function(scope, element, expr) {
-            var itemName = expr.match(/(\w+)\s+in\s+(\w+)/)[1]
+            var itemName = expr.match(/(\w+)\s+in\s+(\w+)/)[1];
             var arrName = expr.match(/(\w+)\s+in\s+(\w+)/)[2];
             var parentElement = element.parentElement;
             var newElements = [element];

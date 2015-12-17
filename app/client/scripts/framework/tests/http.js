@@ -13,7 +13,7 @@ Provider.$register("$http", function() {
             if(HTTPRequest === 'POST') {
                 xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
                 body = JSON.stringify(body);
-            };
+            }
 
             xhr.send(body);
         }
@@ -29,6 +29,6 @@ Provider.$register("$http", function() {
         return {
             get: get,
             post: post
-        }
+        };
     })();
 });

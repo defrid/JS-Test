@@ -18,7 +18,7 @@ app.post('/post', function(req, res) {
     res.json(req.body);
 });
 
-app.use(express.static(__dirname + '/app/client/'));
+app.use(express.static(__dirname + '/build'));
 
 app.listen(port);
 

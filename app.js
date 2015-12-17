@@ -1,24 +1,25 @@
 var express = require('express');
-var http = require('http');
+var bodyParser = require('body-parser');
 
 var app = express();
-app.set('port', 8000);
+var port = 8000;
 
-http.createServer(app).listen(app.get('port'), function() {
-    console.log("Express server listeing on port " + app.get('port'));
+app.use(bodyParser.json());
+
+app.get('/', function(req, res) {
+    res.redirect("/index.html");
+})
+
+app.get('/get', function(req, res) {
+    res.json({value: 10});
 });
 
-app.use(function(reqest, response) {
-    response.header("Access-Control-Allow-Origin", "*");
-    response.json({value: 10});
+app.post('/post', function(req, res) {
+    res.json(req.body);
 });
-/*
-var http = require('http');
 
-http.createServer(function(request, response) {
-    response.writeHead(200, {"Content-Type": "text/plain", "Access-Control-Allow-Origin": "*"});
-    response.end(JSON.stringify({value: 10}));
-}).listen(8000);
+app.use(express.static(__dirname + '/app/client/'));
 
-console.log("Server succesfully started");
-*/
+app.listen(port);
+
+console.log("Express server listeing on port " + port);

@@ -3,10 +3,14 @@ var gulp = require('gulp');
 var server = require( 'gulp-develop-server' );
 var jade = require('gulp-jade');
 
-gulp.task('collectScripts', function() {
-    gulp.src('app/client/scripts/**/*.js')
-        .pipe($.jshint())
-        .pipe($.jshint.reporter('default'))
+gulp.task('collectFramework', function() {
+    gulp.src(['app/client/scripts/framework/Scope.js', 'app/client/scripts/framework/**/*.js'])
+        .pipe($.concat('framework.js'))
+        .pipe(gulp.dest('build'))
+});
+
+gulp.task('collectUserScripts', function() {
+    gulp.src(['!app/client/scripts/framework/**/*.js', 'app/client/scripts/**/*.js'])
         .pipe($.concat('scripts.js'))
         .pipe(gulp.dest('build'))
 });
@@ -20,8 +24,8 @@ gulp.task('convertTemplates', function() {
     var mylocals = {};
 
     gulp.src('app/client/index.jade')
-        .pipe(jade({locals: mylocals}))
+        .pipe(jade({locals: mylocals, pretty: true}))
         .pipe(gulp.dest('build'))
 });
 
-gulp.task('build', ['collectScripts', 'convertTemplates']);
+gulp.task('build', ['collectFramework', 'collectUserScripts', 'convertTemplates']);

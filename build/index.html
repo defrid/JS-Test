@@ -1,1 +1,29 @@
-<!DOCTYPE html><html><head><title>JS-Course</title><script src="scripts.js"></script></head><body><div id="httpTest" sg-controller="httpCtrl"><span id="http" sg-bind="object.value"></span></div><script>Compiler.$compileRoot()</script></body></html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JS-Course</title>
+    <script src="framework.js"></script>
+    <script src="scripts.js"></script>
+    <link rel="stylesheet" href="pagination.css">
+  </head>
+  <body>
+    <div sg-controller="tableCtrl">
+      <table border="1" align="center" id="rpCtrl">
+        <tr>
+          <th>State</th>
+          <th>City</th>
+          <th>Street</th>
+        </tr>
+        <tr sg-repeat="item in data">
+          <td sg-bind="item.state"></td>
+          <td sg-bind="item.city"></td>
+          <td sg-bind="item.street"></td>
+        </tr>
+      </table>
+      <div sg-repeat="number in array" class="paginator">
+        <button sg-click="Click()" sg-bind="number.value"></button>
+      </div>
+    </div>
+    <script>Compiler.$compileRoot();</script>
+  </body>
+</html>

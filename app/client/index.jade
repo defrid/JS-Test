@@ -2,11 +2,20 @@ doctype html
 html
     head
         title JS-Course
-        script(src='scripts.js')
+        script(src="framework.js")
+        script(src="scripts.js")
+        link(rel="stylesheet" href="pagination.css")
     body
-        div#httpTest(sg-controller="httpCtrl"): span#http(sg-bind="object.value")
-        script Compiler.$compileRoot()
-
-    
-
-
+        div(sg-controller="tableCtrl")
+            table(border="1" align="center" id="rpCtrl")
+                tr
+                    th State
+                    th City
+                    th Street
+                tr(sg-repeat="item in data")
+                    td(sg-bind="item.state")
+                    td(sg-bind="item.city")
+                    td(sg-bind="item.street")
+            div(class="paginator" sg-repeat="number in array")
+                button(sg-click="Click()" sg-bind="number.value")
+        script Compiler.$compileRoot();

@@ -4,7 +4,6 @@
             hasScope: false,
             link: function(scope, element, expr) {
                 function handler() {
-                    scope.clickedElement = element;
                     scope.$eval(expr);
                     scope.$digest();
                 }

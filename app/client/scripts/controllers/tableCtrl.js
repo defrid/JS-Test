@@ -1,22 +1,22 @@
 (function(window) {
     Provider.Controller("tableCtrl", function($scope) {
         $scope.data = [{state: "State", city: "City", street: "Street"}];
-        $scope.array = [{value: 1}];
+        $scope.pages = [{value: 1}];
 
-        function cb(body, headers, status) {
-            $scope.array = body;
+        function callback(body, headers, status) {
+            $scope.pages = body;
             $scope.$digest();
         }
 
         var http = Provider.$get("$http");
-        http.get("http://localhost:8000/get", cb);
+        http.get("http://localhost:8000/get/?elementsOnPage=10", callback);
 
-        $scope.Click = function() {
+        $scope.Click = function(pageNumber) {
             function callback(body, headers, status) {
                 $scope.data = body;
                 $scope.$digest();
             }
-            http.get("http://localhost:8000/get/" + $scope.clickedElement.innerHTML, callback);
+            http.get("http://localhost:8000/page/" + "?page=" + pageNumber + "&elementsOnPage=10", callback);
         }
     }); 
 })(window);

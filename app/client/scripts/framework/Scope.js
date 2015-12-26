@@ -80,7 +80,22 @@
                 return expr(scope);
             }
             if(typeof(expr === "string")) {
+                function parse(arrayToParse) {
+                    var nextExpr = arrayToParse.slice(1).join(".");
+                    return scope.$eval.call(scope[arrayToParse[0]], nextExpr);
+                }
+
                 var exprAsArray = expr.match(/\b\w+\b/g);
+                var exprArguments = expr.match(/\(([^)]+)\)/);
+
+                if(exprArguments !== null) {
+                    var argumentsAsArray = exprArguments[1].split(".");
+                    if(argumentsAsArray.length === 1) {
+                        return this[exprAsArray[0]](this[argumentsAsArray[0]]);
+                    };
+                    var arg = parse(argumentsAsArray);
+                    return this[exprAsArray[0]](arg);
+                }
 
                 if(exprAsArray.length === 1) {
                     if(this.hasOwnProperty(exprAsArray[0]) && typeof this[exprAsArray[0]] != "function") {
@@ -92,8 +107,7 @@
                 }
 
                 if(exprAsArray.length > 1) {
-                    var nextExpr = exprAsArray.slice(1).join(".");
-                    return scope.$eval.call(this[exprAsArray[0]], nextExpr);
+                    return parse(exprAsArray);
                 }
             }
         };

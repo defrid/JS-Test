@@ -8,44 +8,32 @@ app.use(bodyParser.json());
 
 var data = require(__dirname + "/data.json");
 
-var pages = [];
-var pageSize = 10;
-var pageCount = [];
-
-for(var i = 0; i < Math.ceil(data.length / pageSize); i++) {
-    pageCount[i] = {value: i + 1};
+function countNumberOfPages(elementsOnPage, source) {
+    var numberOfPages = [];
+    for(var i = 0; i < Math.ceil(source.length / elementsOnPage); i++) {
+        numberOfPages[i] = i + 1;
+    }
+    return numberOfPages;
 }
 
-while(data.length > 0) {
-    pages.push(data.splice(0, pageSize));
-};
-
-app.param(function(name, fn) {
-  if (fn instanceof RegExp) {
-    return function(req, res, next, val) {
-      var captures;
-      if (captures = fn.exec(String(val))) {
-        req.params[name] = captures;
-        next();
-      } else {
-        next('route');
-      }
+function skip(from, to, source) {
+    var content = [];
+    for(var j = from; j < to; j++) {
+        content.push(source[j]);
     }
-  }
-});
-
-app.param("id", /\d+/);
+    return content;
+}
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + "/build/index.html");
 })
 
 app.get('/get', function(req, res) {
-    res.json(pageCount);
+    res.json(countNumberOfPages(req.query.elementsOnPage, data));
 });
 
-app.get('/get/:id', function(req, res) {
-    res.json(pages[req.params.id - 1]);
+app.get('/page', function(req, res) {
+    res.json(skip((req.query.page - 1) * req.query.elementsOnPage, req.query.page * req.query.elementsOnPage, data));
 });
 
 app.post('/post', function(req, res) {

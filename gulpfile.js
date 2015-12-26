@@ -28,4 +28,10 @@ gulp.task('convertTemplates', function() {
         .pipe(gulp.dest('build'))
 });
 
-gulp.task('build', ['collectFramework', 'collectUserScripts', 'convertTemplates']);
+gulp.task('collectStyles', function() {
+    gulp.src('app/client/styles/**/*.css')
+        .pipe($.concat('styles.css'))
+        .pipe(gulp.dest('build'))
+})
+
+gulp.task('build', ['collectFramework', 'collectUserScripts', 'convertTemplates', 'collectStyles']);

@@ -28,9 +28,14 @@
                 sendRequest('POST', url, body, callback);
             }
 
+            function deleteReq(url, callback) {
+                sendRequest('DELETE', url, null, callback);
+            }
+
             return {
                 get: get,
-                post: post
+                post: post,
+                deleteReq: deleteReq
             };
         })();
     });

@@ -12,10 +12,29 @@ html
                     th State
                     th City
                     th Street
+                    th "Delete" button
                 tr(sg-repeat="item in data")
                     td(sg-bind="item.state")
                     td(sg-bind="item.city")
                     td(sg-bind="item.street")
+                    td(align="center")
+                        button(sg-click="delete(item._id)") Delete
             div(class="paginator" sg-repeat="pageNumber in pages")
-                button(sg-click="Click(pageNumber)" sg-bind="pageNumber")
+                button(sg-click="get(pageNumber)" sg-bind="pageNumber")
+            div(id="form")
+                p
+                    b State:
+                        br
+                    input(type="text" size="20" id="state")
+                p
+                    b City: 
+                        br
+                    input(type="text" size="20" id="city")
+                p
+                    b Street:
+                        br
+                    input(type="text" size="20" id="street")
+                p
+                    button(sg-click="post") Submit
+
         script Compiler.$compileRoot();

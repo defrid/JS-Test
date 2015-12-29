@@ -24,16 +24,22 @@
                     newElements.shift();
                 }
 
+                function listenerFn() {
+                    for(var k = newElements.length - 1; k > 0; k--) {
+                        parentElement.removeChild(newElements[k]);
+                        newElements.pop();
+                    }
+                    updateDOM(newElements[0]);
+                }
+
+                if(scope[arrName] === undefined || scope[arrName].length === 0) {
+                    scope.$watch(arrName, listenerFn);
+                    return;
+                };
+
                 updateDOM(newElements[0]);
 
-                scope.$watch(arrName,
-                             function() {
-                                 for(var k = newElements.length - 1; k > 0; k--) {
-                                     parentElement.removeChild(newElements[k]);
-                                     newElements.pop();
-                                 }
-                                 updateDOM(newElements[0]);
-                             });
+                scope.$watch(arrName, listenerFn);
             }
         };
     });

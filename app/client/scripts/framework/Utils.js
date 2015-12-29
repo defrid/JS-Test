@@ -70,6 +70,27 @@
             
             return copy;
         };
+
+        this.range = function(a, b, step) {
+            var res = [];
+            res[0] = a;
+            if(step === undefined) {
+                while(a + 1 <= b) {
+                    res[res.length] = a += 1;
+                }
+            }
+            else if(step > 0){
+                while(a + step <= b) {
+                    res[res.length] = a += step;
+                }
+            }
+            else {
+                while(a + step >= b) {
+                    res[res.length] = a += step;
+                }
+            }
+            return res;
+        };
     }
 })(window);
 

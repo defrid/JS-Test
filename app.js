@@ -34,7 +34,7 @@ function generateId(currentData) {
     if(match === 0) {
         return id;
     }
-    generateId();
+    id = generateId();
 }
 
 app.get('/', function(req, res) {
@@ -42,37 +42,42 @@ app.get('/', function(req, res) {
 });
 
 app.get('/page', function(req, res) {
-    res.setHeader("Total Elements", getData().length);
-    res.json(skip((req.query.page - 1) * req.query.elementsOnPage, req.query.page * req.query.elementsOnPage, getData()));
+    var rawData = getData();
+    var dataToSend = {};
+    dataToSend["totalRecords"] = rawData["totalRecords"];
+    dataToSend["data"] = skip((req.query.page - 1) * req.query.elementsOnPage, req.query.page * req.query.elementsOnPage, rawData["data"]);
+    res.json(dataToSend);
 });
 
-function updatePage(req, res, source) {
+function updateSource(source) {
     fs.writeFileSync(__dirname + "/data.json", JSON.stringify(source));
-    res.setHeader("Total Elements", source.length);
-    res.json(skip((req.query.page - 1) * req.query.elementsOnPage, req.query.page * req.query.elementsOnPage, source));
 }
 
 app.post('/post', function(req, res) {
     var sourceFile = getData();
-    var newId = generateId(sourceFile);
+    var newId = generateId(sourceFile["data"]);
     var newData = {
         _id: newId,
         city: req.body.city,
         street: req.body.street,
         state: req.body.state
     }
-    sourceFile.push(newData);
-    updatePage(req, res, sourceFile);
+    sourceFile["data"].push(newData);
+    sourceFile["totalRecords"]++;
+    updateSource(sourceFile);
+    res.end();
 });
 
-app.delete('/delete', function(req, res) {
+app.delete('/delete/:id', function(req, res) {
     var file = getData();
-    for(var j = 0; j < file.length; j++) {
-        if(file[j]["_id"] === req.query.id) {
-            file.splice(j, 1);
+    for(var j = 0; j < file["data"].length; j++) {
+        if(file["data"][j]["_id"] === req.params.id) {
+            file["data"].splice(j, 1);
         }
     }
-    updatePage(req, res, file);
+    file["totalRecords"]--;
+    updateSource(file);
+    res.end();
 })
 
 app.use(express.static(__dirname + "/build"));

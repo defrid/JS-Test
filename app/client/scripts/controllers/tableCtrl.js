@@ -12,24 +12,28 @@
         var cityInput = document.getElementById("city");
         var streetInput = document.getElementById("street");
 
-        function callback(body, headers, status) {
-            $scope.pages = countNumberOfPages(10, headers.match(/Total Elements: (\d+)/)[1]);
-            $scope.data = body;
-            stateInput.value = "";
-            cityInput.value = "";
-            streetInput.value = "";
+        function callbackForGet(body, headers, status) {
+            $scope.pages = countNumberOfPages(10, body["totalRecords"]);
+            $scope.data = body["data"];
             $scope.$digest();
         }
 
+        function callbackForDeleteAndPost(body, headers, status) {
+            stateInput.value = "";
+            cityInput.value = "";
+            streetInput.value = "";
+            http.get("http://localhost:8000/page/?page=1&elementsOnPage=10", callbackForGet);
+        }
+
         var http = Provider.$get("$http");
-        http.get("http://localhost:8000/page/?page=1&elementsOnPage=10", callback);
+        http.get("http://localhost:8000/page/?page=1&elementsOnPage=10", callbackForGet);
 
         $scope.get = function(pageNumber) {
-            http.get("http://localhost:8000/page/" + "?page=" + pageNumber + "&elementsOnPage=10", callback);
+            http.get("http://localhost:8000/page/" + "?page=" + pageNumber + "&elementsOnPage=10", callbackForGet);
         }
 
         $scope.delete = function(id) {
-            http.deleteReq("http://localhost:8000/delete/" + "?id=" + id + "&page=1&elementsOnPage=10", callback);
+            http.deleteReq("http://localhost:8000/delete/" + id, callbackForDeleteAndPost);
         }
 
         $scope.post = function() {
@@ -38,7 +42,7 @@
                 city: cityInput.value,
                 street: streetInput.value
             }
-            http.post("http://localhost:8000/post/" + "?page=1&elementsOnPage=10", reqBody, callback)
+            http.post("http://localhost:8000/post/", reqBody, callbackForDeleteAndPost);
         }
     }); 
 })(window);

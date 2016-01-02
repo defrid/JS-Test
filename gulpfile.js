@@ -29,9 +29,9 @@ gulp.task('convertTemplates', function() {
 });
 
 gulp.task('collectStyles', function() {
-    gulp.src('app/client/styles/**/*.css')
+    gulp.src('app/client/bower_components/bootstrap/dist/css/bootstrap.css')
         .pipe($.concat('styles.css'))
         .pipe(gulp.dest('build'))
-})
+});
 
 gulp.task('build', ['collectFramework', 'collectUserScripts', 'convertTemplates', 'collectStyles']);

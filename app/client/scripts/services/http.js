@@ -7,7 +7,9 @@
                 xhr.open(HTTPRequest, url, true);
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4) {
-                        var data = JSON.parse(xhr.responseText);
+                        if(xhr.responseText) {
+                            var data = JSON.parse(xhr.responseText);
+                        }
                         return callback(data, xhr.getAllResponseHeaders(), xhr.status);
                     }
                 };

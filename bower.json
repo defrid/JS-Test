@@ -1,0 +1,21 @@
+{
+  "name": "jscourse",
+  "description": "",
+  "main": "app.js",
+  "authors": [
+    "mkalmykov <m.n.kalmykov@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/defrid/JS-Test",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6"
+  }
+}

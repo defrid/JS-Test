@@ -7,7 +7,7 @@ function dbHandler() {
             return db;
         }
 
-        function handleGet(limit, offset, dataToSend, res) {
+        function handleGet(limit, offset, dataToSend, callback) {
             var database = openDatabase();
             database.serialize(function() {
                 database.all("SELECT COUNT(_id) FROM address", function(err, row) {
@@ -16,25 +16,25 @@ function dbHandler() {
                 });
                 database.all("SELECT * FROM address LIMIT ? OFFSET ?", [limit, offset], function(err, row) {
                     dataToSend["data"] = row;
-                    database.close(); 
-                    res.json(dataToSend);
+                    database.close();
+                    callback();
                 });
             });
         }
 
-        function handlePost(req, res) {
+        function handlePost(dataToInsert, callback) {
             var database = openDatabase();   
-            database.run("INSERT INTO address (state, city, street) VALUES (?, ?, ?)", [req.body.state, req.body.city, req.body.street], function(err) {
+            database.run("INSERT INTO address (state, city, street) VALUES (?, ?, ?)", dataToInsert, function(err) {
                 database.close(); 
-                res.end();
+                callback();
             });
         }
-
-        function handleDelete(req, res) {
+        
+        function handleDelete(id, callback) {
             var database = openDatabase(); 
-            database.run("DELETE FROM address WHERE _id = ?", [req.params.id], function(err) {
+            database.run("DELETE FROM address WHERE _id = ?", id, function(err) {
                 database.close(); 
-                res.end();
+                callback();
             });
         }
 

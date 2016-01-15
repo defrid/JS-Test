@@ -1,12 +1,12 @@
 doctype html
-html
+html(ng-app="addressBook")
     head
         title JS-Course
         script(src="framework.js")
         script(src="scripts.js")
         link(rel="stylesheet" href="bootstrap.css")
     body
-        div(sg-controller="tableCtrl" class="container text-center")
+        div(ng-controller="mainCtrl" class="container text-center")
             div(class="row")
                 table(class="table" id="rpCtrl")
                     tr
@@ -14,15 +14,15 @@ html
                         th(class="text-center") City
                         th(class="text-center") Street
                         th
-                    tr(sg-repeat="item in data")
-                        td(sg-bind="item.state")
-                        td(sg-bind="item.city")
-                        td(sg-bind="item.street")
+                    tr(ng-repeat="item in data")
+                        td(ng-bind="item.state")
+                        td(ng-bind="item.city")
+                        td(ng-bind="item.street")
                         td(align="center")
-                            button(sg-click="delete(item._id)" type="button" class="btn btn-danger btn-xs") Delete
+                            button(ng-click="delete(item._id)" type="button" class="btn btn-danger btn-xs") Delete
             div(class="row")
-                div(sg-repeat="pageNumber in pages" class="col-md-1")
-                    button(sg-click="get(pageNumber)" sg-bind="pageNumber" type="button" class="btn btn-success")
+                div(ng-repeat="pageNumber in pages" class="col-md-1")
+                    button(ng-click="get(pageNumber)" ng-bind="pageNumber" type="button" class="btn btn-success")
             div(class="row")            
                 div(class="form-inline" role="form")
                     div(class="form-group")
@@ -31,6 +31,4 @@ html
                         input(type="text" class="form-control" id="city" placeholder="Enter city")
                     div(class="form-group")
                         input(type="text" class="form-control" id="street" placeholder="Enter street")
-                    button(sg-click="post" type="submit" class="btn btn-default") Submit
-
-        script Compiler.$compileRoot();
+                    button(ng-click="post()" type="submit" class="btn btn-default") Submit

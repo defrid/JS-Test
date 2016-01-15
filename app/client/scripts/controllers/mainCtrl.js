@@ -1,5 +1,6 @@
 (function(window) {
-    Provider.Controller("tableCtrl", function($scope) {
+    var addressBook = angular.module("addressBook", []);
+    addressBook.controller("mainCtrl", ["$scope", "$http", function($scope, $http) {
         function countNumberOfPages(elementsOnPage, totalPages) {
             var numberOfPages = [];
             for(var i = 0; i < Math.ceil(totalPages / elementsOnPage); i++) {
@@ -15,25 +16,23 @@
         function callbackForGet(body, headers, status) {
             $scope.pages = countNumberOfPages(10, body["totalRecords"]);
             $scope.data = body["data"];
-            $scope.$digest();
         }
 
         function callbackForDeleteAndPost(body, headers, status) {
             stateInput.value = "";
             cityInput.value = "";
             streetInput.value = "";
-            http.get("http://localhost:8000/page/?page=1&elementsOnPage=10", callbackForGet);
+            $http.get("http://localhost:8000/page/?page=1&elementsOnPage=10").success(callbackForGet);
         }
 
-        var http = Provider.$get("$http");
-        http.get("http://localhost:8000/page/?page=1&elementsOnPage=10", callbackForGet);
+        $http.get("http://localhost:8000/page/?page=1&elementsOnPage=10").success(callbackForGet);
 
         $scope.get = function(pageNumber) {
-            http.get("http://localhost:8000/page/" + "?page=" + pageNumber + "&elementsOnPage=10", callbackForGet);
+            $http.get("http://localhost:8000/page/" + "?page=" + pageNumber + "&elementsOnPage=10").success(callbackForGet);
         }
 
         $scope.delete = function(id) {
-            http.deleteReq("http://localhost:8000/delete/" + id, callbackForDeleteAndPost);
+            $http.delete("http://localhost:8000/delete/" + id).success(callbackForDeleteAndPost);
         }
 
         $scope.post = function() {
@@ -42,7 +41,7 @@
                 city: cityInput.value,
                 street: streetInput.value
             }
-            http.post("http://localhost:8000/post/", reqBody, callbackForDeleteAndPost);
+            $http.post("http://localhost:8000/post/", reqBody).success(callbackForDeleteAndPost);
         }
-    }); 
+    }]); 
 })(window);

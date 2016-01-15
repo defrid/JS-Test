@@ -4,13 +4,13 @@ var server = require( 'gulp-develop-server' );
 var jade = require('gulp-jade');
 
 gulp.task('collectFramework', function() {
-    gulp.src(['app/client/scripts/framework/Scope.js', 'app/client/scripts/framework/**/*.js'])
+    gulp.src(['app/client/bower_components/angular/angular.js'])
         .pipe($.concat('framework.js'))
         .pipe(gulp.dest('build'))
 });
 
 gulp.task('collectUserScripts', function() {
-    gulp.src(['!app/client/scripts/framework/**/*.js', 'app/client/scripts/**/*.js'])
+    gulp.src(['app/client/scripts/**/*.js'])
         .pipe($.concat('scripts.js'))
         .pipe(gulp.dest('build'))
 });

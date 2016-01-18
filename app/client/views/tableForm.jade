@@ -1,0 +1,21 @@
+div(class="container text-center")
+            div(class="row")
+                table(class="table" id="rpCtrl")
+                    tr
+                        th(class="text-center") State
+                        th(class="text-center") City
+                        th(class="text-center") Street
+                        th
+                    tr(ng-repeat="item in data")
+                        td {{item.state}}
+                        td {{item.city}}
+                        td {{item.street}}
+                        td(align="center")
+                            button(ng-click="delete(item._id)" type="button" class="btn btn-danger btn-xs") Delete
+            div(class="row")
+                div(ng-repeat="pageNumber in pages" class="col-md-1")
+                    button(ng-click="get(pageNumber)" type="button" class="btn btn-success") {{pageNumber}}
+div(class="container text-center")
+    button(type="button" class="btn btn-default" ui-sref=".addForm") Click to add record
+div(class="row")
+    div(class="span12" ui-view)

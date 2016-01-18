@@ -1,6 +1,6 @@
+var addressBook = angular.module("addressBook", ["ui.router"]);
 (function(window) {
-    var addressBook = angular.module("addressBook", []);
-    addressBook.controller("mainCtrl", ["$scope", "$http", function($scope, $http) {
+    addressBook.controller("mainCtrl", ["$scope", "$http", "$state", function($scope, $http, $state) {
         function countNumberOfPages(elementsOnPage, totalPages) {
             var numberOfPages = [];
             for(var i = 0; i < Math.ceil(totalPages / elementsOnPage); i++) {
@@ -9,19 +9,13 @@
             return numberOfPages;
         }
 
-        var stateInput = document.getElementById("state");
-        var cityInput = document.getElementById("city");
-        var streetInput = document.getElementById("street");
-
         function callbackForGet(body, headers, status) {
             $scope.pages = countNumberOfPages(10, body["totalRecords"]);
             $scope.data = body["data"];
+            $state.go("tableForm");
         }
 
-        function callbackForDeleteAndPost(body, headers, status) {
-            stateInput.value = "";
-            cityInput.value = "";
-            streetInput.value = "";
+        function callbackForDelete(body, headers, status) {
             $http.get("http://localhost:8000/page/?page=1&elementsOnPage=10").success(callbackForGet);
         }
 
@@ -32,16 +26,7 @@
         }
 
         $scope.delete = function(id) {
-            $http.delete("http://localhost:8000/delete/" + id).success(callbackForDeleteAndPost);
+            $http.delete("http://localhost:8000/delete/" + id).success(callbackForDelete);
         }
-
-        $scope.post = function() {
-            var reqBody = {
-                state: stateInput.value,
-                city: cityInput.value,
-                street: streetInput.value
-            }
-            $http.post("http://localhost:8000/post/", reqBody).success(callbackForDeleteAndPost);
-        }
-    }]); 
+    }]);  
 })(window);

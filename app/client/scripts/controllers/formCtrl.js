@@ -8,9 +8,6 @@
         }
 
         $scope.post = function() {
-            if(!$scope.state || !$scope.city || !$scope.street) {
-                return;
-            }
             var reqBody = {
                 state: $scope.state,
                 city: $scope.city,
